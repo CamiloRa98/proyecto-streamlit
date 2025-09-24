@@ -14,9 +14,7 @@ Original file is located at
 - Aplicamos el modelo para la predicción
 """
 
-!pip install skforecast
 
-pip install streamlit
 
 #Cargamos librerías principales
 import numpy as np
