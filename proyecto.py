@@ -46,16 +46,18 @@ if st.button("Generar pronóstico"):
         "Fecha": y_pred.index.to_period("M").to_timestamp(),
         "Pronostico_Cantidad": y_pred.values.round(0).astype(int)
     })
+    # Columna de texto mes-año
+    resultado["Fecha_str"] = resultado["Fecha"].dt.strftime("%b-%Y")
 
     # Mostrar tabla
     st.subheader("📊 Resultados del pronóstico")
-    st.dataframe(resultado)
+    st.dataframe(resultado[["Fecha_str", "Pronostico_Cantidad"]])
 
     # Gráfico con Altair
     chart = alt.Chart(resultado).mark_line(point=True).encode(
-        x=alt.X("Fecha:T", title="Fecha", axis=alt.Axis(format="%b-%Y")),  # eje X mes-año
+        x=alt.X("Fecha_str:O", title="Fecha"),   # eje categórico
         y=alt.Y("Pronostico_Cantidad:Q", title="Cantidad"),
-        tooltip=["Fecha", "Pronostico_Cantidad"]
+        tooltip=["Fecha_str", "Pronostico_Cantidad"]
     ).properties(
         title="Pronóstico de ventas mensuales",
         width=700,
@@ -63,5 +65,4 @@ if st.button("Generar pronóstico"):
     )
 
     st.altair_chart(chart, use_container_width=True)
-
 
