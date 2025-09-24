@@ -41,7 +41,7 @@ if st.button("Generar pronóstico"):
 
     # Crear DataFrame con resultados
     resultado = pd.DataFrame({
-        "Fecha": y_pred.index,
+        "Fecha": y_pred.index.to_period("M").to_timestamp(),  # solo año-mes
         "Pronostico_Cantidad": y_pred.values.round(0).astype(int)  # sin decimales
     })
 
@@ -51,3 +51,4 @@ if st.button("Generar pronóstico"):
 
     # Graficar resultados
     st.line_chart(resultado.set_index("Fecha"))
+
