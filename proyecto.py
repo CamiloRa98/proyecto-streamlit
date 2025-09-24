@@ -46,25 +46,35 @@ if st.button("Generar pronóstico"):
         "Fecha": y_pred.index.to_period("M").to_timestamp(),
         "Pronostico_Cantidad": y_pred.values.round(0).astype(int)
     })
-    # Columna de texto mes-año
     resultado["Fecha_str"] = resultado["Fecha"].dt.strftime("%b-%Y")
-
-    # Orden cronológico explícito
     resultado = resultado.sort_values("Fecha")
 
-    # Mostrar tabla limpia
+    # Mostrar tabla
     st.subheader("📊 Resultados del pronóstico")
     st.dataframe(resultado[["Fecha_str", "Pronostico_Cantidad"]])
 
-    # Gráfico con orden correcto
-    chart = alt.Chart(resultado).mark_line(point=True).encode(
-        x=alt.X("Fecha_str", title="Fecha", sort=list(resultado["Fecha_str"])),  # orden manual
+    # Gráfico principal (línea con puntos)
+    line = alt.Chart(resultado).mark_line(point=True).encode(
+        x=alt.X("Fecha_str", title="Fecha", sort=list(resultado["Fecha_str"])),
         y=alt.Y("Pronostico_Cantidad:Q", title="Cantidad"),
         tooltip=["Fecha_str", "Pronostico_Cantidad"]
-    ).properties(
+    )
+
+    # Etiquetas de valores
+    text = alt.Chart(resultado).mark_text(
+        align="center", dy=-10, fontSize=12, color="white"
+    ).encode(
+        x=alt.X("Fecha_str", sort=list(resultado["Fecha_str"])),
+        y="Pronostico_Cantidad:Q",
+        text="Pronostico_Cantidad:Q"
+    )
+
+    # Combinar ambos
+    chart = (line + text).properties(
         title="Pronóstico de ventas mensuales",
-        width=700,
+        width=800,
         height=400
     )
 
     st.altair_chart(chart, use_container_width=True)
+
