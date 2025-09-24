@@ -89,7 +89,7 @@ Y_pred = forecaster_cargado.predict(steps=n_periodos)
 print(Y_pred)
 
 #data_preparada = data_preparada.set_index('fecha')
-data_preparada['Prediccion'] = Y_pred.round(0).astype(int)
+#data_preparada['Prediccion'] = Y_pred.round(0).astype(int)
 data_preparada.head()
 
 #Predicciones finales
