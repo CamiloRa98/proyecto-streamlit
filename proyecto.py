@@ -35,20 +35,33 @@ n_periodos = st.slider(
 # ========================
 # Botón para generar predicción
 # ========================
+import altair as alt
+
 if st.button("Generar pronóstico"):
     # Generar predicciones
     y_pred = forecaster_cargado.predict(steps=n_periodos)
 
     # Crear DataFrame con resultados
     resultado = pd.DataFrame({
-        "Fecha": y_pred.index.to_period("M").to_timestamp(),  # solo año-mes
-        "Pronostico_Cantidad": y_pred.values.round(0).astype(int)  # sin decimales
+        "Fecha": y_pred.index.to_period("M").to_timestamp(),
+        "Pronostico_Cantidad": y_pred.values.round(0).astype(int)
     })
 
     # Mostrar tabla
     st.subheader("📊 Resultados del pronóstico")
     st.dataframe(resultado)
 
-    # Graficar resultados
-    st.line_chart(resultado.set_index("Fecha"))
+    # Gráfico con Altair
+    chart = alt.Chart(resultado).mark_line(point=True).encode(
+        x=alt.X("Fecha:T", title="Fecha", axis=alt.Axis(format="%b-%Y")),  # eje X mes-año
+        y=alt.Y("Pronostico_Cantidad:Q", title="Cantidad"),
+        tooltip=["Fecha", "Pronostico_Cantidad"]
+    ).properties(
+        title="Pronóstico de ventas mensuales",
+        width=700,
+        height=400
+    )
+
+    st.altair_chart(chart, use_container_width=True)
+
 
