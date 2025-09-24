@@ -77,10 +77,10 @@ if st.button("Generar pronóstico"):
     st.line_chart(resultado.set_index("Fecha"))
 
 #Cargamos los datos futuros
-data_preparada = pd.read_excel("pronostico_ventas.xlsx")
-data_preparada.head()
-data_preparada.drop(columns=['Cantidad'], inplace=True)
-data_preparada.head()
+#data_preparada = pd.read_excel("pronostico_ventas.xlsx")
+#data_preparada.head()
+#data_preparada.drop(columns=['Cantidad'], inplace=True)
+#data_preparada.head()
 
 n_periodos = len(data_preparada)   # cantidad de filas en tu Excel de fechas futuras
 Y_pred = forecaster_cargado.predict(steps=n_periodos)
