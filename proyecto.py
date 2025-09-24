@@ -49,13 +49,16 @@ if st.button("Generar pronóstico"):
     # Columna de texto mes-año
     resultado["Fecha_str"] = resultado["Fecha"].dt.strftime("%b-%Y")
 
-    # Mostrar tabla
+    # Orden cronológico explícito
+    resultado = resultado.sort_values("Fecha")
+
+    # Mostrar tabla limpia
     st.subheader("📊 Resultados del pronóstico")
     st.dataframe(resultado[["Fecha_str", "Pronostico_Cantidad"]])
 
-    # Gráfico con Altair
+    # Gráfico con orden correcto
     chart = alt.Chart(resultado).mark_line(point=True).encode(
-        x=alt.X("Fecha_str:O", title="Fecha"),   # eje categórico
+        x=alt.X("Fecha_str", title="Fecha", sort=list(resultado["Fecha_str"])),  # orden manual
         y=alt.Y("Pronostico_Cantidad:Q", title="Cantidad"),
         tooltip=["Fecha_str", "Pronostico_Cantidad"]
     ).properties(
@@ -65,4 +68,3 @@ if st.button("Generar pronóstico"):
     )
 
     st.altair_chart(chart, use_container_width=True)
-
