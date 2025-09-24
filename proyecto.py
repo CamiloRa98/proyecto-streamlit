@@ -82,7 +82,7 @@ if st.button("Generar pronóstico"):
 #data_preparada.drop(columns=['Cantidad'], inplace=True)
 #data_preparada.head()
 
-n_periodos = len(data_preparada)   # cantidad de filas en tu Excel de fechas futuras
+#n_periodos = len(data_preparada)   # cantidad de filas en tu Excel de fechas futuras
 Y_pred = forecaster_cargado.predict(steps=n_periodos)
 
 # Mostrar resultados
