@@ -49,24 +49,27 @@ if st.button("Generar pronóstico"):
     resultado["Fecha_str"] = resultado["Fecha"].dt.strftime("%b-%Y")
     resultado = resultado.sort_values("Fecha")
 
-    # Mostrar tabla
+    # ✅ Formato con puntos en miles
+    resultado["Pronostico_Cantidad_fmt"] = resultado["Pronostico_Cantidad"].map(lambda x: f"{x:,}".replace(",", "."))
+
+    # Mostrar tabla con formato
     st.subheader("📊 Resultados del pronóstico")
-    st.dataframe(resultado[["Fecha_str", "Pronostico_Cantidad"]])
+    st.dataframe(resultado[["Fecha_str", "Pronostico_Cantidad_fmt"]])
 
     # Gráfico principal (línea con puntos)
     line = alt.Chart(resultado).mark_line(point=True).encode(
         x=alt.X("Fecha_str", title="Fecha", sort=list(resultado["Fecha_str"])),
         y=alt.Y("Pronostico_Cantidad:Q", title="Cantidad"),
-        tooltip=["Fecha_str", "Pronostico_Cantidad"]
+        tooltip=["Fecha_str", "Pronostico_Cantidad_fmt"]
     )
 
-    # Etiquetas de valores
+    # Etiquetas con separador de miles
     text = alt.Chart(resultado).mark_text(
         align="center", dy=-10, fontSize=12, color="white"
     ).encode(
         x=alt.X("Fecha_str", sort=list(resultado["Fecha_str"])),
         y="Pronostico_Cantidad:Q",
-        text="Pronostico_Cantidad:Q"
+        text="Pronostico_Cantidad_fmt"
     )
 
     # Combinar ambos
